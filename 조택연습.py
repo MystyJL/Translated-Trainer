@@ -23,7 +23,7 @@ def main():
             break
 
     # 기본 성공 기준 초
-    success_threshold = 0.06
+    success_threshold = 0.03
 
     # 성공 기준 변경 여부 확인
     print("\n현재 성공 기준 시간은 {:.3f}초입니다.".format(success_threshold))
