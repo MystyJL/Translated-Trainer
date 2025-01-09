@@ -23,23 +23,42 @@ def main():
             break
 
     # 기본 성공 기준 초
-    success_threshold = 0.03
+    success_threshold = 0.06
 
-    # 기준 변경 여부 확인
+    # 성공 기준 변경 여부 확인
     print("\n현재 성공 기준 시간은 {:.3f}초입니다.".format(success_threshold))
-    change_threshold = input("성공 기준 시간을 변경하시겠습니까? (y/n): ").strip().lower()
-
-    if change_threshold == 'y':
-        while True:
-            try:
-                success_threshold = float(input("새로운 성공 기준 시간을 입력하세요 (초 단위): "))
-                if success_threshold > 0:
-                    print("성공 기준 시간이 {:.3f}초로 변경되었습니다.".format(success_threshold))
-                    break
-                else:
-                    print("0보다 큰 값을 입력하세요.")
-            except ValueError:
-                print("유효한 숫자를 입력하세요.")
+    print("성공 기준 시간을 변경하려면 'y', 유지하려면 'n'을 눌러주세요.")
+    while True:
+        event = keyboard.read_event()
+        if event.event_type == 'down':
+            if event.name == 'y':
+                print("새로운 성공 기준 시간을 입력하세요 (초 단위, 엔터키로 확인):")
+                input_time = ""
+                while True:
+                    input_event = keyboard.read_event()
+                    if input_event.event_type == 'down':
+                        if input_event.name == 'enter':
+                            try:
+                                new_threshold = float(input_time)
+                                if new_threshold > 0:
+                                    success_threshold = new_threshold
+                                    print(Fore.GREEN + f"성공 기준 시간이 {success_threshold:.3f}초로 변경되었습니다." + Style.RESET_ALL)
+                                    break
+                                else:
+                                    print(Fore.RED + "0보다 큰 값을 입력하세요." + Style.RESET_ALL)
+                            except ValueError:
+                                print(Fore.RED + "유효한 숫자를 입력하세요." + Style.RESET_ALL)
+                            break
+                        elif input_event.name == 'backspace':
+                            input_time = input_time[:-1]
+                            print(f"\r입력 중: {input_time}{' ' * 10}", end='', flush=True)
+                        else:
+                            input_time += input_event.name
+                            print(f"\r입력 중: {input_time}{' ' * 10}", end='', flush=True)
+                break
+            elif event.name == 'n':
+                print(Fore.YELLOW + "기본 성공 기준 시간을 유지합니다." + Style.RESET_ALL)
+                break
 
     test_start_message_shown = False
 
